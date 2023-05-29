@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 const Login = () => {
   const navigate = useNavigate();
-  const [alertVisible, showAlert] = useState(false);
   let [username, setUsername] = useState("");
   let [password, setPassword] = useState("");
 
@@ -18,9 +17,8 @@ const Login = () => {
       localStorage.setItem("Isauth", "true");
       navigate("/dashboard/");
     } else {
-      //   navigate("/alert");
       ReactDOM.render(
-        <Alert children="Login failed, try again..."></Alert>,
+        <Alert>Login failed, try again...</Alert>,
         document.getElementById("root")
       );
     }
@@ -34,10 +32,10 @@ const Login = () => {
       <div>
         <form>
           <div className="row mb-3">
-            <label htmlFor="t1username" className="col-sm-2 col-form-label">
+            <label htmlFor="t1username" className="col-sm-1 col-form-label">
               Username:
             </label>
-            <div className="col-sm-10">
+            <div className="col-sm-4">
               <input
                 type="text"
                 className="form-control"
@@ -48,10 +46,10 @@ const Login = () => {
             </div>
           </div>
           <div className="row mb-3">
-            <label htmlFor="t2password" className="col-sm-2 col-form-label">
+            <label htmlFor="t2password" className="col-sm-1 col-form-label">
               Password:
             </label>
-            <div className="col-sm-10">
+            <div className="col-sm-4">
               <input
                 type="password"
                 className="form-control"

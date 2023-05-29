@@ -1,24 +1,19 @@
-import { useNavigate } from "react-router-dom";
-
 interface Props {
   children: string;
 }
 const Alert = (props: Props) => {
-  const navigate = useNavigate();
   return (
-    <>
-      <div
-        className="alert alert-warning alert-dismissible fade show"
-        role="alert">
-        <strong>{props.children}!</strong>
-        <button
-          type="button"
-          className="btn-close"
-          data-bs-dismiss="alert"
-          aria-label="Close"
-          onClick={() => navigate("/login")}></button>
-      </div>
-    </>
+    <div
+      className="alert alert-danger alert-dismissible fade show"
+      role="alert">
+      {props.children}
+      <button
+        type="button"
+        className="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+        onClick={() => location.reload()}></button>
+    </div>
   );
 };
 
