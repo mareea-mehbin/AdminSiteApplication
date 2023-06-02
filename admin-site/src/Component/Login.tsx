@@ -1,31 +1,46 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
+import axios, { AxiosResponse } from "axios";
+
+interface LoginData {
+  userName: string;
+  pwd: string;
+}
+
 const Login = () => {
   const navigate = useNavigate();
-  let [username, setUsername] = useState("");
-  let [password, setPassword] = useState("");
+  const [loginData, setLoginData] = useState<LoginData>({
+    userName: "",
+    pwd: "",
+  });
 
   const doLogin = () => {
-    if (username === "" || password === "") {
-      alert("Username or Password must not be blank.");
+    if (loginData.userName === "" || loginData.pwd === "") {
+      alert("Username or Password can't be blank");
       return;
     }
-    if (username === "admin" && password === "admin") {
-      localStorage.setItem("username", username);
-      localStorage.setItem("Isauth", "true");
-      navigate("/dashboard/");
-    } else {
-      ReactDOM.render(
-        <Alert>Login failed, try again...</Alert>,
-        document.getElementById("root")
-      );
-    }
+    // navigate("/dashboard/");
+    axios
+      .post("http://localhost:62239/api/login", loginData)
+      .then((response) => {
+        if (response.data) {
+          localStorage.setItem("Isauth", "true");
+          navigate("/dashboard/");
+        } else {
+          ReactDOM.render(
+            <Alert>Login failed. Please try again...</Alert>,
+            document.getElementById("root")
+          );
+        }
+      });
   };
   const handleReset = () => {
-    setUsername("");
-    setPassword("");
+    setLoginData({
+      userName: "",
+      pwd: "",
+    });
   };
   return (
     <>
@@ -40,8 +55,10 @@ const Login = () => {
                 type="text"
                 className="form-control"
                 id="t1username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={loginData.userName}
+                onChange={(e) =>
+                  setLoginData({ ...loginData, userName: e.target.value })
+                }
               />
             </div>
           </div>
@@ -54,13 +71,15 @@ const Login = () => {
                 type="password"
                 className="form-control"
                 id="t2password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={loginData.pwd}
+                onChange={(e) =>
+                  setLoginData({ ...loginData, pwd: e.target.value })
+                }
               />
             </div>
           </div>
           <div>
-            <button type="submit" className="btn btn-primary" onClick={doLogin}>
+            <button type="button" className="btn btn-primary" onClick={doLogin}>
               Login
             </button>
             <button

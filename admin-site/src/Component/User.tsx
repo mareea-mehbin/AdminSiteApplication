@@ -1,72 +1,64 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useUser from "../Hooks/useUser";
+
+interface Users {
+  id: string;
+  userName: string;
+  companyID: string;
+  companyName: string;
+  userType: string;
+}
 const User = () => {
   const navigate = useNavigate();
-  const goToDetails = () => {
-    navigate("/userdetails/u001");
+  const { users, error, isLoading, deleteUser } = useUser();
+
+  const goToDetails = (user: Users) => {
+    navigate(`/userdetails/${user.id}`);
   };
-  let clients = [
-    {
-      uid: "u001",
-      uname: "Rosa",
-      cid: "co001",
-      cname: "Company01",
-      upermission: "permission01",
-      utype: "type01",
-    },
-    {
-      uid: "u002",
-      uname: "Holly",
-      cid: "co002",
-      cname: "Company02",
-      upermission: "permission02",
-      utype: "type02",
-    },
-    {
-      uid: "u003",
-      uname: "Betty",
-      cid: "co003",
-      cname: "Company03",
-      upermission: "permission03",
-      utype: "type03",
-    },
-    {
-      uid: "u004",
-      uname: "Claire",
-      cid: "co004",
-      cname: "Company04",
-      upermission: "permission04",
-      utype: "type04",
-    },
-  ];
 
   return (
     <>
-      <table className="table table-striped">
-        <tr>
-          <th scope="col">User ID</th>
-          <th scope="col">User Name</th>
-          <th scope="col">Company ID</th>
-          <th scope="col">Company Name</th>
-          <th scope="col">User Permission</th>
-          <th scope="col">User Type</th>
-          <th scope="col">Details</th>
-        </tr>
-        {clients.map((item, index) => (
-          <tr key={index}>
-            <td>{item.uid}</td>
-            <td>{item.uname}</td>
-            <td>{item.cid}</td>
-            <td>{item.cname}</td>
-            <td>{item.upermission}</td>
-            <td>{item.utype}</td>
-            <td>
-              <button className="btn btn-light" onClick={goToDetails}>
-                Details
-              </button>
-            </td>
-          </tr>
-        ))}
-      </table>
+      {error && <p>{error}</p>}
+      {isLoading && <div className="spiner-border">Loading...</div>}
+      {!isLoading && (
+        <div>
+          <h2>Users List</h2>
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">User ID</th>
+                <th scope="col">Username</th>
+                <th scope="col">Company ID</th>
+                <th scope="col">Company Name</th>
+                <th scope="col">User Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.id}</td>
+                  <td>{item.userName}</td>
+                  <td>{item.companyID}</td>
+                  <td>{item.companyName}</td>
+                  <td>{item.userType}</td>
+                  <td>
+                    <button
+                      className="btn btn-light"
+                      onClick={() => goToDetails(item)}>
+                      Details
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => deleteUser(item.id)}>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <button
         className="btn btn-secondary"
